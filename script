@@ -1,0 +1,13 @@
+git clone https://github.com/toshik4/exam-poletikin.git
+touch /root/exam-poletikin/hosts
+git clone https://gitlab.com/staskuznetsov/site.git -b main
+echo 20.100.195.188 > /root/exam-poletikin/hosts
+ansible-playbook -i /root/exam-poletikin/hosts /root/exam-poletikin/playbook.yml
+rm -Rf  /root/site
+git clone https://gitlab.com/staskuznetsov/site.git -b dev
+echo 20.100.196.16 > /root/exam-poletikin/hosts
+ansible-playbook -i /root/exam-poletikin/hosts /root/exam-poletikin/playbook.yml
+rm -Rf /root/site
+git clone https://gitlab.com/staskuznetsov/site.git -b feature
+echo 20.100.198.82 > /root/exam-poletikin/hosts
+ansible-playbook -i /root/exam-poletikin/hosts /root/exam-poletikin/playbook.yml
