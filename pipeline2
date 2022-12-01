@@ -1,0 +1,83 @@
+pipeline {
+  agent any 
+  options {
+  // This is required if you want to clean before build
+   skipDefaultCheckout(true)
+  } 
+
+  stages {
+
+    stage('Stage 1. Cloning branch jenkins') {
+      steps {
+      cleanWs() // Clean before build
+      sh "echo '******************start cloning branch jenkins from github********************'"
+      sh "rm -Rf Jenkins1"
+      sh "rm -Rf /var/lib/jenkins/workspace/pipeline2/jenkins/"
+      sh "git clone  https://github.com/toshik4/exam-poletikin.git /var/lib/jenkins/workspace/pipeline2/jenkins -b jenkins"
+      sh "echo 'echo ******************end cloning branch jenkins from githubt********************'"
+    }
+  }
+
+
+    stage('Stage 2. Cloning branch master') {
+      steps {
+      //cleanWs() // Clean before build
+      sh "echo '******************start cloning branch main from git********************'"
+      //sh "rm -Rf /var/lib/jenkins/workspace/pipeline1/site/"
+      sh "git clone https://gitlab.com/staskuznetsov/site.git  /var/lib/jenkins/workspace/pipeline2/site -b main"
+      sh "echo 'echo ******************end cloning branch main from git********************'"
+    }
+  }
+    stage('Stage 3. deploying branch master to Prob1 20.100.195.188') {
+      steps {
+      //cleanWs() // Clean before build
+      sh "echo '******************start deploying branch master to Prob1 20.100.195.188 ********************'"
+      sh "touch /var/lib/jenkins/workspace/pipeline2/jenkins/hosts"
+      sh "echo 20.100.195.188 > /var/lib/jenkins/workspace/pipeline2/jenkins/hosts"
+      sh "ansible-playbook /var/lib/jenkins/workspace/pipeline2/jenkins/playbook.yml -u root --key-file=/key/id_rsa -i /var/lib/jenkins/workspace/pipeline2/jenkins/hosts"
+      sh "echo 'echo ******************end deploying branch master to Prob1 20.100.195.188********************'"
+    }
+  }
+  
+      stage('Stage 4. Cloning branch dev') {
+      steps {
+      //cleanWs() // Clean before build
+      sh "echo '******************start cloning branch dev from git********************'"
+      sh "rm -Rf /var/lib/jenkins/workspace/pipeline2/site"
+      sh "git clone https://gitlab.com/staskuznetsov/site.git  /var/lib/jenkins/workspace/pipeline2/site -b dev"
+      sh "echo 'echo ******************end cloning branch dev from git********************'"
+    }
+  }
+  
+    stage('Stage 5. deploying branch dev to Prob2 20.100.196.16') {
+      steps {
+      //cleanWs() // Clean before build
+      sh "echo '******************start deploying branch dev to Prob2 20.100.196.16 ********************'"
+      sh "touch /var/lib/jenkins/workspace/pipeline2/jenkins/hosts"
+      sh "echo 20.100.196.16 > /var/lib/jenkins/workspace/pipeline2/jenkins/hosts"
+      sh "ansible-playbook /var/lib/jenkins/workspace/pipeline2/jenkins/playbook.yml -u root --key-file=/key/id_rsa -i /var/lib/jenkins/workspace/pipeline2/jenkins/hosts"
+      sh "echo 'echo ******************end deploying branch dev to Prob2 20.100.196.16********************'"
+    }
+  }
+  
+    stage('Stage 6. Cloning branch feature') {
+      steps {
+      //cleanWs() // Clean before build
+      sh "echo '******************start cloning branch feature from ********************'"
+      sh "rm -Rf /var/lib/jenkins/workspace/pipeline2/site"
+      sh "git clone https://gitlab.com/staskuznetsov/site.git  /var/lib/jenkins/workspace/pipeline2/site -b feature"
+      sh "echo 'echo ******************end cloning branch feature ********************'"
+    }
+  }
+    stage('Stage 7. deploying branch dev to Prob3 20.100.198.82') {
+      steps {
+      //cleanWs() // Clean before build
+      sh "echo '****************** start deploying branch dev to Prob3 20.100.198.82 ********************'"
+      sh "touch /var/lib/jenkins/workspace/pipeline2/jenkins/hosts"
+      sh "echo 20.100.198.82 > /var/lib/jenkins/workspace/pipeline2/jenkins/hosts"
+      sh "ansible-playbook /var/lib/jenkins/workspace/pipeline2/jenkins/playbook.yml -u root --key-file=/key/id_rsa -i /var/lib/jenkins/workspace/pipeline2/jenkins/hosts"
+      sh "echo 'echo ****************** end deploying branch dev to Prob3 20.100.198.82 ********************'"
+    }
+  }
+} 
+}
